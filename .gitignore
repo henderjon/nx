@@ -1,0 +1,7 @@
+nx
+
+bin/
+release/
+
+!bin/.gitkeep
+!release/.gitkeep
