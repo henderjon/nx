@@ -10,7 +10,7 @@ import (
 
 func main() {
 	var n int
-	flag.Func("n", "the number of times to execute", func(s string) error {
+	flag.Func("n", "the number of times to execute; if absent, use the first arg", func(s string) error {
 		n = intval(s)
 		return nil
 	})
@@ -33,7 +33,7 @@ func main() {
 func intval(s string) int {
 	n, err := strconv.Atoi(s)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "unable to parse '%s' as a number\n", s)
 		os.Exit(1)
 	}
 	return n
