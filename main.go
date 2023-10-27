@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"os"
@@ -9,6 +10,12 @@ import (
 )
 
 func main() {
+	var x bool
+	flag.BoolFunc("x", "read the remainder of the args as the command", func(s string) error {
+		x = true
+		return nil
+	})
+
 	var n int
 	flag.Func("n", "the number of times to execute; if absent, use the first arg", func(s string) error {
 		n = intval(s)
@@ -23,7 +30,19 @@ func main() {
 		args = args[1:]
 	}
 
-	cmd := strings.Join(args, " ")
+	var cmd string
+
+	if x {
+		cmd = strings.Join(args, " ")
+	} else {
+		scanner := bufio.NewScanner(os.Stdin)
+		if scanner.Scan() {
+			if err := scanner.Err(); err != nil {
+				fmt.Fprintln(os.Stderr, "unable to read from stdin")
+			}
+			cmd = scanner.Text()
+		}
+	}
 
 	for i := 0; i < n; i++ {
 		fmt.Println(cmd)
